@@ -1,0 +1,34 @@
+------------------------------------------------------------------------------------
+Script to create diagram on https://www.websequencediagrams.com/
+------------------------------------------------------------------------------------
+
+Title What Happens When User Create A New Note 
+
+browser->server: HTTP POST form data to https://studies.cs.helsinki.fi/exampleapp/new_note
+
+note over server:
+server create a new note object
+and adds it to the notes array
+end note
+
+server->browser: ask to reload https://studies.cs.helsinki.fi/exampleapp/notes
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/notes
+server-->browser: HTML-code
+browser->server:HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+server->browser: main.css
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.js
+server->browser: main.js
+
+note over browser
+browser execute main.js that 
+reqeust JSON data from server
+end note
+
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+server->browser: data.json
+
+note over browser:
+browser execute the event handler
+that renders notes to display
+end note
+

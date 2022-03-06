@@ -1,0 +1,13 @@
+----------------------------------------------------------
+Script to make diagram on https://www.websequencediagrams.com/
+----------------------------------------------------------
+Title Create A New Note on SPA
+
+note over browser
+use the form submit event hander
+in JavaScript to create a new note
+render it and send it the server
+end note
+
+browser->server: HTTP POST new note data in json format to https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+server->browser: 201 created
