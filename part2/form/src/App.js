@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-
+const phonebook_url = 'http://localhost:3001/persons'
 
 const Filter = ({ filter, handler }) => {
   return (
@@ -50,7 +50,7 @@ const App = () => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:3001/persons')
+      .get(phonebook_url)
       .then(response => {
         setPersons(response.data)
       })
@@ -67,9 +67,13 @@ const App = () => {
       alert(newName + "is already added to the phone book")
     }
     else {
-      setPersons(persons.concat(p))
-      setNewName('')
-      setNewNumber('')
+      axios
+      .post(phonebook_url, p)
+      .then(response=>{
+        setPersons(persons.concat(response.data))
+        setNewName('')
+        setNewNumber('')
+      })
     }
   }
 
