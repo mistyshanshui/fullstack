@@ -28,32 +28,33 @@ const PersonForm = ({ submitHandler, name, nameHandler, number, numberHandler })
 }
 
 
-const Names = ({ persons }) => {
+const Name = ({ person, onDelete }) => {
+  return (
+    <p>{person.name} {person.number} <button id={person.id} onClick={onDelete}>delete</button></p>
+  )
+}
+
+const Persons = ({ persons, filter, onDelete }) => {
+  const filtered = persons.filter(p => p.name.toLowerCase().includes(filter.toLowerCase()) == true)
+
   return (
     <>
-      {persons.map(person => <p key={person.name}>{person.name} {person.number}</p>)}
+      {filtered.map(p => <Name key={p.name} person={p} onDelete={onDelete} />)}
     </>
   )
 }
 
-const Persons = ({ persons, filter }) => {
-  return (
-    <Names persons={persons.filter(p => p.name.toLowerCase().includes(filter.toLowerCase()) == true)} />
-  )
-}
-
-const App = () => {
-  const [persons, setPersons] = useState([])
+const App = (props) => {
+  const [persons, setPersons] = useState(props.persons)
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
 
-  useEffect(() => {
-    phonebookService.getAll()
-      .then(allEntries => setPersons(allEntries))
-  }, [])
-  
   const addName = (event) => {
+    if (newName === '' || newNumber === '') {
+      return
+    }
+
     event.preventDefault()
 
     const p = {
@@ -85,6 +86,15 @@ const App = () => {
     setFilter(event.target.value)
   }
 
+  const onDelete = (event) => {
+    const person = persons.find(p => p.id == event.target.id)
+    if(window.confirm("delete "  + person.name + "?")){
+      phonebookService.deleteEntry(event.target.id)
+      phonebookService.getAll()
+      .then(data => setPersons(data))
+    }
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -92,7 +102,7 @@ const App = () => {
       <h2>add a new</h2>
       <PersonForm submitHandler={addName} name={newName} number={newNumber} nameHandler={handleNameChange} numberHandler={handleNumberChange} />
       <h2>Numbers</h2>
-      <Persons persons={persons} filter={filter} />
+      <Persons persons={persons} filter={filter} onDelete={onDelete}/>
     </div>
   )
 }

@@ -1,8 +1,13 @@
 import ReactDOM from 'react-dom';
 import App from './App';
+import phonebookService from './services/phonebook';
 
-ReactDOM.render(
-  <App />,
-  document.getElementById('root')
-);
+phonebookService.getAll()
+.then(persons=>{
+  ReactDOM.render(
+    <App persons={persons}/>,
+    document.getElementById('root')
+  );
+})
+
 
