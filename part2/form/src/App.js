@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import phonebookService from './services/phonebook'
 
+const NOTICE = 0
+const ERROR = 1
+
 const Filter = ({ filter, handler }) => {
   return (
     <p>
@@ -44,15 +47,24 @@ const Persons = ({ persons, filter, onDelete }) => {
   )
 }
 
-const Notification = ({ message }) => {
-  const messageStyle = {
-    color: "green",
+const Notification = ({ message, type }) => {
+  const errorMessageStyle = {
+    color: "red",
+    background: "gray",
     fontSize: 30,
     borderStyle: 'solid',
-    background : "lightgreen",
     padding: 10
   }
 
+  const noticeMessageStyle = {
+    color: "green",
+    background: "lightgreen",
+    fontSize: 30,
+    borderStyle: 'solid',
+    padding: 10
+  }
+
+  const messageStyle = type == ERROR ? errorMessageStyle : noticeMessageStyle
   if (message === null) {
     return null
   }
@@ -71,6 +83,15 @@ const App = (props) => {
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
   const [message, setMessage] = useState(null)
+  const [messageType, setMessageType] = useState(NOTICE)
+
+  const displayMessage = (message, type) => {
+    setMessage(message)
+    setMessageType(type)
+    setTimeout(() => {
+      setMessage(null)
+    }, 5000);
+  }
 
   const addName = (event) => {
     if (newName === '' || newNumber === '') {
@@ -83,13 +104,6 @@ const App = (props) => {
       name: newName, number: newNumber
     }
 
-    const displayMessage = (message)=>{
-      setMessage(message)
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000);
-    }
-
     const found = persons.find(element => element.name === newName)
     if (undefined != found) {
       if (window.confirm(newName + " is already added to the phone book, replace the old number with a new one?")) {
@@ -98,7 +112,7 @@ const App = (props) => {
           .then(data => {
             setPersons(persons.map(p => p.id === found.id ? data : p))
           })
-        displayMessage('Updated phone number for ' + found.name)
+        displayMessage('Updated phone number for ' + found.name, NOTICE)
       }
     }
     else {
@@ -108,7 +122,7 @@ const App = (props) => {
           setNewName('')
           setNewNumber('')
         })
-        displayMessage('Added ' + p.name)
+      displayMessage('Added ' + p.name, NOTICE)
     }
   }
 
@@ -128,6 +142,9 @@ const App = (props) => {
     const person = persons.find(p => p.id == event.target.id)
     if (window.confirm("delete " + person.name + "?")) {
       phonebookService.deleteEntry(event.target.id)
+        .catch(error => {
+          displayMessage('information for ' + person.name + ' has already been removed from server.', ERROR)
+        })
       setPersons(persons.filter(p => p.id != person.id))
     }
   }
@@ -135,7 +152,7 @@ const App = (props) => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={message} />
+      <Notification message={message} type={messageType} />
       <Filter filter={filter} handler={handleFilterChange} />
       <h2>add a new</h2>
       <PersonForm submitHandler={addName} name={newName} number={newNumber} nameHandler={handleNameChange} numberHandler={handleNumberChange} />
