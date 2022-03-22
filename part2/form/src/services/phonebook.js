@@ -19,4 +19,10 @@ const deleteEntry = (id) => {
         .then(response => response.data)
 }
 
-export default { getAll, create, deleteEntry }
+const update = (id, entry) => {
+    return axios
+        .put(url + '/' + id, entry)
+        .then(response => response.data)
+}
+
+export default { getAll, create, deleteEntry, update }

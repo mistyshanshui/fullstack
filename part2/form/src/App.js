@@ -61,8 +61,14 @@ const App = (props) => {
       name: newName, number: newNumber
     }
 
-    if (undefined != persons.find(element => element.name === newName)) {
-      alert(newName + "is already added to the phone book")
+    const found = persons.find(element => element.name === newName)
+    if (undefined != found) {
+      if(window.confirm(newName + " is already added to the phone book, replace the old number with a new one?")){
+        const newEntry = {...found, number: newNumber}
+        phonebookService.update(found.id, newEntry)
+        .then(data=>{
+          setPersons(persons.map(p=> p.id === found.id ? data : p))})
+      }
     }
     else {
       phonebookService.create(p)
@@ -90,8 +96,7 @@ const App = (props) => {
     const person = persons.find(p => p.id == event.target.id)
     if(window.confirm("delete "  + person.name + "?")){
       phonebookService.deleteEntry(event.target.id)
-      phonebookService.getAll()
-      .then(data => setPersons(data))
+      setPersons(persons.filter(p => p.id != person.id))
     }
   }
 
