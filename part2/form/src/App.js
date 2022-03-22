@@ -44,11 +44,33 @@ const Persons = ({ persons, filter, onDelete }) => {
   )
 }
 
+const Notification = ({ message }) => {
+  const messageStyle = {
+    color: "green",
+    fontSize: 30,
+    borderStyle: 'solid',
+    background : "lightgreen",
+    padding: 10
+  }
+
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div style={messageStyle}>
+      {message}
+    </div>
+  )
+}
+
+
 const App = (props) => {
   const [persons, setPersons] = useState(props.persons)
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [message, setMessage] = useState(null)
 
   const addName = (event) => {
     if (newName === '' || newNumber === '') {
@@ -61,13 +83,22 @@ const App = (props) => {
       name: newName, number: newNumber
     }
 
+    const displayMessage = (message)=>{
+      setMessage(message)
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000);
+    }
+
     const found = persons.find(element => element.name === newName)
     if (undefined != found) {
-      if(window.confirm(newName + " is already added to the phone book, replace the old number with a new one?")){
-        const newEntry = {...found, number: newNumber}
+      if (window.confirm(newName + " is already added to the phone book, replace the old number with a new one?")) {
+        const newEntry = { ...found, number: newNumber }
         phonebookService.update(found.id, newEntry)
-        .then(data=>{
-          setPersons(persons.map(p=> p.id === found.id ? data : p))})
+          .then(data => {
+            setPersons(persons.map(p => p.id === found.id ? data : p))
+          })
+        displayMessage('Updated phone number for ' + found.name)
       }
     }
     else {
@@ -77,6 +108,7 @@ const App = (props) => {
           setNewName('')
           setNewNumber('')
         })
+        displayMessage('Added ' + p.name)
     }
   }
 
@@ -94,7 +126,7 @@ const App = (props) => {
 
   const onDelete = (event) => {
     const person = persons.find(p => p.id == event.target.id)
-    if(window.confirm("delete "  + person.name + "?")){
+    if (window.confirm("delete " + person.name + "?")) {
       phonebookService.deleteEntry(event.target.id)
       setPersons(persons.filter(p => p.id != person.id))
     }
@@ -103,11 +135,12 @@ const App = (props) => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <Filter filter={filter} handler={handleFilterChange} />
       <h2>add a new</h2>
       <PersonForm submitHandler={addName} name={newName} number={newNumber} nameHandler={handleNameChange} numberHandler={handleNumberChange} />
       <h2>Numbers</h2>
-      <Persons persons={persons} filter={filter} onDelete={onDelete}/>
+      <Persons persons={persons} filter={filter} onDelete={onDelete} />
     </div>
   )
 }
