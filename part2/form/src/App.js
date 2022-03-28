@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react'
-import axios from 'axios'
+import { useState } from 'react'
 import phonebookService from './services/phonebook'
 
 const NOTICE = 0
@@ -38,7 +37,7 @@ const Name = ({ person, onDelete }) => {
 }
 
 const Persons = ({ persons, filter, onDelete }) => {
-  const filtered = persons.filter(p => p.name.toLowerCase().includes(filter.toLowerCase()) == true)
+  const filtered = persons.filter(p => p.name.toLowerCase().includes(filter.toLowerCase()) === true)
 
   return (
     <>
@@ -64,7 +63,7 @@ const Notification = ({ message, type }) => {
     padding: 10
   }
 
-  const messageStyle = type == ERROR ? errorMessageStyle : noticeMessageStyle
+  const messageStyle = type === ERROR ? errorMessageStyle : noticeMessageStyle
   if (message === null) {
     return null
   }
@@ -105,7 +104,7 @@ const App = (props) => {
     }
 
     const found = persons.find(element => element.name === newName)
-    if (undefined != found) {
+    if (found) {
       if (window.confirm(newName + " is already added to the phone book, replace the old number with a new one?")) {
         const newEntry = { ...found, number: newNumber }
         phonebookService.update(found.id, newEntry)
@@ -139,13 +138,14 @@ const App = (props) => {
   }
 
   const onDelete = (event) => {
-    const person = persons.find(p => p.id == event.target.id)
+    const id = Number(event.target.id)
+    const person = persons.find(p => p.id === id)
     if (window.confirm("delete " + person.name + "?")) {
-      phonebookService.deleteEntry(event.target.id)
+      phonebookService.deleteEntry(id)
         .catch(error => {
           displayMessage('information for ' + person.name + ' has already been removed from server.', ERROR)
         })
-      setPersons(persons.filter(p => p.id != person.id))
+      setPersons(persons.filter(p => p.id !== person.id))
     }
   }
 
