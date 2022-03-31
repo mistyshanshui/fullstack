@@ -42,7 +42,7 @@ const Persons = ({ persons, filter, onDelete }) => {
 
   return (
     <>
-      {filtered.map(p => <Name key={p.name} person={p} onDelete={onDelete} />)}
+      {filtered.map(p => <Name key={p.id} person={p} onDelete={onDelete} />)}
     </>
   )
 }
@@ -105,14 +105,14 @@ const App = (props) => {
     }
 
     const found = persons.find(element => element.name === newName)
-    if (undefined != found) {
+    if (found) {
       if (window.confirm(newName + " is already added to the phone book, replace the old number with a new one?")) {
         const newEntry = { ...found, number: newNumber }
         phonebookService.update(found.id, newEntry)
           .then(data => {
             setPersons(persons.map(p => p.id === found.id ? data : p))
+            displayMessage('Updated phone number for ' + found.name, NOTICE)
           })
-        displayMessage('Updated phone number for ' + found.name, NOTICE)
       }
     }
     else {
@@ -121,8 +121,8 @@ const App = (props) => {
           setPersons(persons.concat(addedPerson))
           setNewName('')
           setNewNumber('')
+          displayMessage('Added ' + p.name, NOTICE)
         })
-      displayMessage('Added ' + p.name, NOTICE)
     }
   }
 
