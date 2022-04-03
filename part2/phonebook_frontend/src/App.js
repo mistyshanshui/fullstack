@@ -113,6 +113,9 @@ const App = (props) => {
             setPersons(persons.map(p => p.id === found.id ? data : p))
             displayMessage('Updated phone number for ' + found.name, NOTICE)
           })
+          .catch(error=>{
+            displayMessage(error.response.data.error, ERROR)  
+          })
       }
     }
     else {
@@ -122,6 +125,9 @@ const App = (props) => {
           setNewName('')
           setNewNumber('')
           displayMessage('Added ' + p.name, NOTICE)
+        })
+        .catch(error =>{
+          displayMessage(error.response.data.error, ERROR)
         })
     }
   }
