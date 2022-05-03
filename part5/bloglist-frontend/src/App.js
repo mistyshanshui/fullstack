@@ -24,18 +24,32 @@ const App = () => {
     )
   }, [])
 
+  useEffect(()=>{
+    const userString = window.localStorage.getItem('loggedBlogUser')
+    if(userString){
+      const user = JSON.parse(userString)
+      setUser(user)
+    }
+  })
+
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
       console.log('login using ', username, password)
       const user = await loginService.login({ username, password })
-       setUser(user)
+      window.localStorage.setItem('loggedBlogUser', JSON.stringify(user))
+      setUser(user)
       setUsername('')
       setPassword('')
     }
     catch (exception) {
       displayMessage('credential error', true)
     }
+  }
+
+  const handleLogout = () =>{
+    window.localStorage.removeItem('loggedBlogUser')
+    setUser(null)
   }
 
   const loginForm = () => (
@@ -51,15 +65,15 @@ const App = () => {
     </form>
   )
 
-  const blogList = (username, blogs)=>(
-    <Blogs blogs={blogs} username={username}/>
+  const blogList = (username, blogs, handler)=>(
+    <Blogs blogs={blogs} username={username} handler={handler}/>
   )
 
   return (
     <div>
       <Notification message={message} isErrorMessage={isErrorMessage}/>      
       {user === null && loginForm()}
-      {user !== null && blogList(user.username, blogs)}
+      {user !== null && blogList(user.username, blogs, handleLogout)}
     </div>
   )
 }
