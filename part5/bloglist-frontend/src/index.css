@@ -1,0 +1,17 @@
+.error {
+    color: red;    
+    border-color: red;
+}
+
+.info {
+    color: green;
+    border-color: green;
+}
+
+.common {
+    background-color: lightgray ;
+
+    border: solid 3px;
+    font-size: 30px;
+    padding: 10px;
+}

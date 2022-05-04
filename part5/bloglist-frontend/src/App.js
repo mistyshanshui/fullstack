@@ -3,6 +3,7 @@ import Blogs from './components/Blogs'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import './index.css'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -47,7 +48,7 @@ const App = () => {
       setPassword('')
     }
     catch (exception) {
-      displayMessage('credential error', true)
+      displayMessage(exception.response.data.error, true)
     }
   }
 
@@ -67,6 +68,7 @@ const App = () => {
       blogService.setToken(user.token)
       const returnedBlog = await blogService.create(blog)
       setBlogs(blogs.concat(returnedBlog))
+      displayMessage('a new blog ' + returnedBlog.title + ' by ' + returnedBlog.author + ' is added')
       setAuthor('')
       setTitle('')
       setUrl('')
@@ -102,9 +104,13 @@ const App = () => {
     </form>
   )
 
+  const notification = ()=>(
+    <Notification message={message} isErrorMessage={isErrorMessage} />
+  )
+
   return (
     <div>
-      <Notification message={message} isErrorMessage={isErrorMessage} />
+      {message !== null && notification()}
       {user === null && loginForm()}
       {user !== null && createBlog(title, author, url)}
       {user !== null && blogList(user.username, blogs, handleLogout)}
