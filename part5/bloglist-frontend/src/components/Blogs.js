@@ -8,7 +8,7 @@ const Blog = ({ blog, updateBlog }) => {
   }
 
   const updateLikes = () => {
-    const newBlog =  {...blog, likes : blog.likes +1}
+    const newBlog = { ...blog, likes: blog.likes + 1 }
     updateBlog(newBlog)
   }
 
@@ -33,6 +33,9 @@ const Blog = ({ blog, updateBlog }) => {
 }
 
 const Blogs = ({ blogs, updateBlog }) => {
+  blogs.sort((a, b) => {
+    return b.likes - a.likes
+  })
   return (
     <>
       {blogs.map(blog =>
