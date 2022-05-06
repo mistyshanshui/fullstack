@@ -67,6 +67,17 @@ const App = () => {
     }
   }
  
+  const updateBlog = async (newBlog) =>{
+    try{
+      blogService.setToken(user.token)
+      const returnedBlog = await blogService.update(newBlog)
+      setBlogs(blogs.map( blog=>blog.id === newBlog.id ? newBlog : blog))
+    }
+    catch(exception){
+      displayMessage(exception.message, true)
+    }
+  }
+
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <h2>Log into application</h2>
@@ -87,7 +98,7 @@ const App = () => {
       <Togglable buttonLable="new blog">
         <BlogForm addBlog={addBlog} />
       </Togglable>
-      <Blogs blogs={blogs} username={username} />
+      <Blogs blogs={blogs} updateBlog={updateBlog} />
     </>
   )
 
@@ -99,7 +110,7 @@ const App = () => {
     <div>
       {message !== null && notification()}
       {user === null && loginForm()}
-      {user !== null && blogList(user.username, blogs, handleLogout)}
+      {user !== null && blogList(user.username, blogs)}
     </div>
   )
 }
