@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const Blog = ({ blog, updateBlog }) => {
+const Blog = ({ blog, updateBlog, removeBlog }) => {
   const [visible, setVisible] = useState(false)
 
   const toggleVisibility = () => {
@@ -10,6 +10,12 @@ const Blog = ({ blog, updateBlog }) => {
   const updateLikes = () => {
     const newBlog = { ...blog, likes: blog.likes + 1 }
     updateBlog(newBlog)
+  }
+
+  const remove =()=>{
+    if (window.confirm(`Remove blog ${blog.title}?`)) {
+      removeBlog(blog.id)    
+    }
   }
 
   const hide = { display: visible ? 'none' : '' }
@@ -27,19 +33,20 @@ const Blog = ({ blog, updateBlog }) => {
         <li style={listStyle}>{blog.url}</li>
         <li style={listStyle}>likes {blog.likes} <button onClick={updateLikes}>like</button></li>
         <li style={listStyle}>{blog.author}</li>
+        <button onClick={remove}>remove</button>
       </div>
     </div>
   )
 }
 
-const Blogs = ({ blogs, updateBlog }) => {
+const Blogs = ({ blogs, updateBlog, removeBlog }) => {
   blogs.sort((a, b) => {
     return b.likes - a.likes
   })
   return (
     <>
       {blogs.map(blog =>
-        <Blog blog={blog} updateBlog={updateBlog} />
+        <Blog blog={blog} updateBlog={updateBlog} removeBlog={removeBlog} />
       )}
     </>
   )
