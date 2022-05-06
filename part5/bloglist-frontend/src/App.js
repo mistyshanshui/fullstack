@@ -106,7 +106,7 @@ const App = () => {
     <>
       <h2>Blogs</h2>
       <p>{username} logged in <button onClick={handleLogout}>logout</button></p>
-      <Togglable buttonLable="new blog">
+      <Togglable buttonLabel="new blog">
         <BlogForm addBlog={addBlog} />
       </Togglable>
       <Blogs blogs={blogs} updateBlog={updateBlog} removeBlog={removeBlog}/>

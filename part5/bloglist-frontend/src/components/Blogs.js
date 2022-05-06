@@ -24,7 +24,7 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
   const blogBorder = { border: 'solid', margin: 3 }
 
   return (
-    <div key={blog.title} style={blogBorder}>
+    <div style={blogBorder}>
       <div style={hide}>
         {blog.title} <button onClick={toggleVisibility}>view</button>
       </div>
@@ -46,7 +46,7 @@ const Blogs = ({ blogs, updateBlog, removeBlog }) => {
   return (
     <>
       {blogs.map(blog =>
-        <Blog blog={blog} updateBlog={updateBlog} removeBlog={removeBlog} />
+        <Blog  key={blog.title} blog={blog} updateBlog={updateBlog} removeBlog={removeBlog} />
       )}
     </>
   )
