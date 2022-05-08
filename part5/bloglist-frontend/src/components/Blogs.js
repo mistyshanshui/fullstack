@@ -12,9 +12,9 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
     updateBlog(newBlog)
   }
 
-  const remove =()=>{
+  const remove = () => {
     if (window.confirm(`Remove blog ${blog.title}?`)) {
-      removeBlog(blog.id)    
+      removeBlog(blog.id)
     }
   }
 
@@ -46,7 +46,7 @@ const Blogs = ({ blogs, updateBlog, removeBlog }) => {
   return (
     <>
       {blogs.map(blog =>
-        <Blog  key={blog.title} blog={blog} updateBlog={updateBlog} removeBlog={removeBlog} />
+        <Blog key={blog.title} blog={blog} updateBlog={updateBlog} removeBlog={removeBlog} />
       )}
     </>
   )

@@ -66,25 +66,25 @@ const App = () => {
       displayMessage(exception.message, true)
     }
   }
- 
-  const updateBlog = async (newBlog) =>{
-    try{
-      blogService.setToken(user.token)      
-      const returnedBlog = await blogService.update(newBlog)      
-      setBlogs(blogs.map( blog=>blog.id === newBlog.id ? newBlog : blog))
+
+  const updateBlog = async (newBlog) => {
+    try {
+      blogService.setToken(user.token)
+      await blogService.update(newBlog)
+      setBlogs(blogs.map(blog => blog.id === newBlog.id ? newBlog : blog))
     }
-    catch(exception){
+    catch (exception) {
       displayMessage(exception.message, true)
     }
   }
 
-  const removeBlog = async (id) =>{
-    try{
+  const removeBlog = async (id) => {
+    try {
       blogService.setToken(user.token)
-      await blogService.remove(id)      
-      setBlogs(blogs.filter(blog=> blog.id !== id))
+      await blogService.remove(id)
+      setBlogs(blogs.filter(blog => blog.id !== id))
     }
-    catch(exception){
+    catch (exception) {
       dispatchEvent(exception.message, true)
     }
   }
@@ -109,7 +109,7 @@ const App = () => {
       <Togglable buttonLabel="new blog">
         <BlogForm addBlog={addBlog} />
       </Togglable>
-      <Blogs blogs={blogs} updateBlog={updateBlog} removeBlog={removeBlog}/>
+      <Blogs blogs={blogs} updateBlog={updateBlog} removeBlog={removeBlog} />
     </>
   )
 
