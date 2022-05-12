@@ -19,38 +19,38 @@ const create = async (blogObject) => {
 
     return response.data
   }
-  catch(error){
-    throw new Error(error.response.data.error)
+  catch (error) {
+    throw new Error(error.message)
   }
 }
 
-const update = async (newBlog)=>{
-  try{
-    const config={
-      headers: {Authorization: token}
+const update = async (newBlog) => {
+  try {
+    const config = {
+      headers: { Authorization: token }
     }
     const url = `${baseUrl}/${newBlog.id}`
     const response = await axios.put(url, newBlog, config)
     console.log(response.data)
     return response.data
   }
-  catch(error){
+  catch (error) {
     throw new Error(error.response.data.error)
   }
 }
 
-const remove = async (id) =>{
-  try{
+const remove = async (id) => {
+  try {
     const config = {
-      headers : {Authorization: token}
+      headers: { Authorization: token }
     }
     const url = `${baseUrl}/${id}`
     const response = await axios.delete(url, config)
     return response.data
   }
-  catch(error){
+  catch (error) {
     throw new Error(error.response.data.error)
   }
 }
 
-export default { getAll, setToken, create, update, remove}
+export default { getAll, setToken, create, update, remove }
