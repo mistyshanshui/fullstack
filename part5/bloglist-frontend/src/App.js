@@ -119,7 +119,7 @@ const App = () => {
 
   return (
     <div>
-      {message !== null && notification()}
+      {message && message !== '' && notification()}
       {user === null && loginForm()}
       {user !== null && blogList(user.username, blogs)}
     </div>
