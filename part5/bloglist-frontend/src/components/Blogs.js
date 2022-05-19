@@ -24,15 +24,15 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
   const blogBorder = { border: 'solid', margin: 3 }
 
   return (
-    <div style={blogBorder}>
+    <div style={blogBorder} data-testid='hidenview'>
       <div style={hide}>
-        {blog.title} {blog.author} <button onClick={toggleVisibility}>view</button>
+        <li data-testid='title and author' style={listStyle}>{blog.title} {blog.author} <button onClick={toggleVisibility}>view</button></li>
       </div>
-      <div style={show}>
-        <li style={listStyle}>{blog.title} {blog.author}<button onClick={toggleVisibility}>hide</button></li>
-        <li style={listStyle}>{blog.url}</li>
-        <li style={listStyle}>likes {blog.likes} <button onClick={updateLikes}>like</button></li>
-        <li style={listStyle}>{blog.user.username}</li>
+      <div style={show} id='detailview'>
+        <li data-testid='title and author detailed view' style={listStyle}>{blog.title} {blog.author}<button onClick={toggleVisibility}>hide</button></li>
+        <li data-testid='url' style={listStyle}>{blog.url}</li>
+        <li data-testid='likes' style={listStyle}>likes {blog.likes} <button onClick={updateLikes}>like</button></li>
+        <li data-testid='username' style={listStyle}>{blog.user.username}</li>
         <button onClick={remove}>remove</button>
       </div>
     </div>
@@ -52,4 +52,4 @@ const Blogs = ({ blogs, updateBlog, removeBlog }) => {
   )
 }
 
-export default Blogs
+export { Blogs, Blog }
